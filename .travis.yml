@@ -1,0 +1,36 @@
+language: python
+python:
+  - "2.6"
+  - "2.7"
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+  - "3.5-dev" # 3.5 development branch
+  - "nightly" # currently points to 3.6-dev
+install: pip install tox python-coveralls
+script: tox -v
+after_success: coveralls
+
+deploy:
+    # test pypi
+  - provider: pypi
+    distributions: "sdist bdist_wheel"
+    server: https://testpypi.python.org/pypi
+    user: theidledeveloper
+    password:
+      secure: "X75BVy4vgPlmcpEMYP48dVOMFrVwJxBgpOx9FQI4S9GAThsgHubBugWKtYUXkxWJ3TCgkIiHGZBAP1qnRjKjCPPLuw5q8Ndx2xd6VlLQmiwvlDYH/MjnJ/bDIQa3eOs7pzZ6d07SaVgg5uEpnva+5ApX/LPEBajb1UA/XtkbN/3mD+HExZdPJriYK0ovXXuusVW6ZEgR5nh4J8U2JOTr5x+AOuXhdM/9fqRBff0y1mZ6lHJXCJ6PqV0tZgEh1/EkjJaZERvQzjDhtmwual9KEUfUU4vqOwfnbp04C5PpxJH9J3Ya7r1Jh+Xa72ahCAbToFFM0EfX5jevPds8fzu5qbCIkJ6nM3gt2EzBTOv6gDHXIyXoTg8cgaIRQXpDvjyHsscsOU6o9cx6izbOtS6hP+BJJ9wjRcXbqvDlAxPOfyXGV8j7uR7l0X9u6sWC6hE6F0+s0OMr+GX74ctnEQ3k/ojDzNEwg3GPM4ceXTgbaf6IqJaEQvE00Ewc4Cib5eOf+MJWteKIbdqXbGgL7s5GoH1aZw91SiMb/WgdlOyuw89PfM61BmYLwFx8uutAnrCQxCR36YEloIRbwn3Src00dVYnXwdvZMrDw9Ic0ZPVNoxlxeWQo8V9Q7uTlAUm2TdWMLghxqmLkVwRTJ3ERQcbH0DoZRbz7wlNkM7w6d0VEKQ="
+    on:
+      branch: master
+      tags: false
+
+deploy:
+  provider: pypi
+  distributions: "sdist bdist_wheel"
+  user: theidledeveloper
+  password:
+    secure: "FJvnO6B8beFxYGwpE8jgOPyisO/xg/R3ogeX6TXb1FrvMf7Awe456x6DqKdao6g5rpKW/Xc1uZLwz+C9iuXyN7+LPv50QBZDjpRvk5ibzoO9t8/3Z+HGmg1425O+ubX67eaHiXXlCO/aU0q6VKhaxJVVh8ct8x/WNwqgKkjBA0VRMDDXR9hdYGp5MUzcQFfbz1cefBymQVkM3tqW3ZW6J4bToUEiwe5GRSVJHvT3R1MdXTMsMJsasNET8Lgb3xLNm9NHzzua4fV0PfQo3ZZfY0TPTdDEUuIxSy6mryMCJzXgji0FiEalvQVbZxRTf3EhyJb/3JmcPvYxF3ERtapXPKVcehAwe1OO95HMp+4iVR8Pyy9gB4pxSWehvZIhm9Gmz1/CWjxw4YOXeb2l5IcQQcWD+1jLHqY4oVdNtrXMI+GegV7O7JvRet9aQLr6HEBiP9PZ9V0QSyTDc9255Z+e+q13DQS72aX5lHQhL5AR/PVRyBQ+BYNPXhVIJ+tL++IPvgrSHR1xhhe8GQq8AKWNauG4M943kWBxMXD5gHIHt0UcxPEPNRu2n9f1+5ATnJBRzs5WZAGWxwhNCyEmb0Ct4HaXTZxEHWhFXNW1M70S8sdgdvc3/6qLc4HvZqU3TSUeKvVJn3JF0/1mdm6lbG+TfI79C+dAZRHPqoKIPSDyraY="
+  on:
+    tags: true
+    branch: master
+    repo: theidledeveloper/s3-cmd-website
