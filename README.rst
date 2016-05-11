@@ -9,9 +9,9 @@ Create, Update and Delete static websites in S3
    :alt: PyPI badge
    :target: http://badge.fury.io/py/s3-cmd-website
 
-.. image:: https://coveralls.io/repos/theidledeveloper/s3_cmd_website/badge.svg?branch=master&service=github
+.. image:: https://coveralls.io/repos/theidledeveloper/s3-cmd-website/badge.svg?branch=master&service=github
    :alt: Test coverage
-   :target: https://coveralls.io/github/theidledeveloper/s3_cmd_website?branch=master
+   :target: https://coveralls.io/github/theidledeveloper/s3-cmd-website?branch=master
 
 This tool is a wrapper around the s3_cmd_ command line tool to provide
 easy configuration for creating, maintaining and deleting s3 static websites
