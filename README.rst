@@ -5,7 +5,7 @@ Create, Update and Delete static websites in S3
    :alt: Build Status
    :target: https://travis-ci.org/theidledeveloper/s3-cmd-website
 
-.. image:: https://badge.fury.io/py/s3_cmd_website.svg
+.. image:: https://badge.fury.io/py/s3-cmd-website.svg
    :alt: PyPI badge
    :target: http://badge.fury.io/py/s3-cmd-website
 
