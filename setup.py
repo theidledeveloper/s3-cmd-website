@@ -35,7 +35,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'console_scripts': [
-            's3_website = main:main',
+            's3_website = s3_website.main:main',
         ]
     },
 
