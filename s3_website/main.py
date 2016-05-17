@@ -38,6 +38,22 @@ def global_options(parser):
                              ' Default: %(default)s',
                         )
 
+    parser.add_argument('--access_key',
+                        action='store',
+                        default=None,
+                        help='Override the AWS access key used to override the'
+                             ' configuration files.'
+                             ' Default: %(default)s',
+                        )
+
+    parser.add_argument('--secret_key',
+                        action='store',
+                        default=None,
+                        help='Override the AWS secret key used to override the'
+                             ' configuration files.'
+                             ' Default: %(default)s',
+                        )
+
     parser.add_argument('-L', '--log_level',
                         default='info',
                         help='Log level for script. Default: %(default)s',

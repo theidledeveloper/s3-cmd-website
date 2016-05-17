@@ -30,7 +30,7 @@ def set_command_line_options(subparsers):
     parser.add_argument('-P', '--acl_public',
                         action='store_true',
                         help='Make the website public',
-                        default=True,
+                        default=False,
                         required=False,
                         )
 
@@ -68,6 +68,9 @@ def main(**kwargs):
     s3_website_config = kwargs['s3_website_config']
 
     s3_cmd_config = args.s3_cmd_config
+    access_key = args.access_key
+    secret_key = args.secret_key
+
     make_bucket = args.make_bucket
     index_file = args.index_file
     error_file = args.error_file
@@ -78,17 +81,17 @@ def main(**kwargs):
 
     if make_bucket:
         logger.info("Creating bucket '%s'" % s3_bucket)
-        create_bucket = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config,
-                         'mb', '--region', s3_endpoint, s3_bucket, ]
-        result = command_runner.run(logger, create_bucket, ACTION)
+        create_bucket = [helper.s3cmd_path(), 'mb', s3_bucket, ]
+        result = command_runner.run(logger, create_bucket, ACTION,
+                                    s3_cmd_config, access_key, secret_key,
+                                    s3_endpoint, )
         if result != 0:
             return result
     else:
         logger.debug("Skipping creation of bucket '%s'" % s3_bucket)
 
     logger.info("Creating website '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'ws-create',
-               '--region', s3_endpoint, ]
+    command = [helper.s3cmd_path(), 'ws-create', ]
 
     command.extend(['--ws-index=%s' % index_file], )
     command.extend(['--ws-error=%s' % error_file], )
@@ -98,4 +101,5 @@ def main(**kwargs):
         command.extend(['--acl-public'], )
 
     command.extend([s3_bucket])
-    return command_runner.run(logger, command, ACTION)
+    return command_runner.run(logger, command, ACTION, s3_cmd_config,
+                              access_key, secret_key, s3_endpoint, )

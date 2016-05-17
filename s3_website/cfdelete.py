@@ -41,6 +41,8 @@ def main(**kwargs):
 
     args = kwargs['args']
     s3_cmd_config = args.s3_cmd_config
+    access_key = args.access_key
+    secret_key = args.secret_key
 
     cloudfront_distribution = helper.add_cf_prefix(
         s3_website_config.cloudfront_distribution_id)
@@ -49,8 +51,8 @@ def main(**kwargs):
 
     logger.info("Deleting CloudFront distribution '%s'" %
                 cloudfront_distribution)
-    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'cfdelete',
-               '--region', s3_endpoint, ]
+    command = [helper.s3cmd_path(), 'cfdelete', ]
 
     command.extend([cloudfront_distribution])
-    return command_runner.run(logger, command, ACTION)
+    return command_runner.run(logger, command, ACTION, s3_cmd_config,
+                              access_key, secret_key, s3_endpoint, )

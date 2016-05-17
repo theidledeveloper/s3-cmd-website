@@ -1,7 +1,12 @@
 from subprocess import Popen, PIPE
 
 
-def run(logger, command, operation):
+def run(logger, command, operation,
+        s3cmd_config_path=None,
+        access_key=None,
+        secret_key=None,
+        region=None,
+        ):
     """
     Helper script for running subprocess commands
 
@@ -9,7 +14,21 @@ def run(logger, command, operation):
     :param command: List(string) - the command and options to be executed
     :param operation: String - The operation being performed in text
      e.g. CloudFront creation, CloudFront deletion
+    :param s3cmd_config_path: String - Path to the local s3cmd file
+    :param access_key: String - Override AWS access key
+    :param secret_key: String - Override AWS secret key
+    :param region: String - Override the AWS region
     """
+
+    if s3cmd_config_path:
+        command.extend(['--config=%s' % s3cmd_config_path], )
+
+    if access_key and secret_key:
+        command.extend(['--access_key=%s' % access_key,
+                        '--secret_key=%s' % secret_key, ])
+
+    if region:
+        command.extend(['--region=%s' % region], )
 
     logger.debug(command)
     process = Popen(command, stdout=PIPE, stderr=PIPE)

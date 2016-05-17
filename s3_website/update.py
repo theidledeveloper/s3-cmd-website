@@ -40,6 +40,8 @@ def main(**kwargs):
 
     args = kwargs['args']
     s3_cmd_config = args.s3_cmd_config
+    access_key = args.access_key
+    secret_key = args.secret_key
 
     s3_website_config = kwargs['s3_website_config']
 
@@ -58,8 +60,7 @@ def main(**kwargs):
 
     for rule in cache_rules:
 
-        command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'sync',
-                   '--region', s3_endpoint, '--acl-public', ]
+        command = [helper.s3cmd_path(), 'sync', '--acl-public', ]
 
         local_match = ("'%s'" % rule['match']
                        if 'match' in rule and rule['match'] else "'*.*'")
@@ -87,7 +88,8 @@ def main(**kwargs):
             command.extend([gzip_string], )
 
         command.extend([site, s3_bucket])
-        result = command_runner.run(logger, command, ACTION)
+        result = command_runner.run(logger, command, ACTION, s3_cmd_config,
+                                    access_key, secret_key, s3_endpoint, )
         if result != 0:
             return result
 

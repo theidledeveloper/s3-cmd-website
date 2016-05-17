@@ -86,6 +86,9 @@ def main(**kwargs):
     s3_website_config = kwargs['s3_website_config']
 
     s3_cmd_config = args.s3_cmd_config
+    access_key = args.access_key
+    secret_key = args.secret_key
+
     enable = args.enable
     disable = args.disable
     cname = args.cname
@@ -100,8 +103,7 @@ def main(**kwargs):
 
     logger.info("Updating CloudFront distribution '%s'" %
                 cloudfront_distribution)
-    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'cfmodify',
-               '--region', s3_endpoint, ]
+    command = [helper.s3cmd_path(), 'cfmodify', ]
 
     if enable:
         command.extend(['--enable'])
@@ -117,4 +119,6 @@ def main(**kwargs):
         command.extend(['--no-access-logging'])
 
     command.extend([cloudfront_distribution], )
-    return command_runner.run(logger, command, ACTION)
+
+    return command_runner.run(logger, command, ACTION, s3_cmd_config,
+                              access_key, secret_key, s3_endpoint, )
