@@ -14,9 +14,12 @@ def run(logger, command, operation):
     logger.debug(command)
     process = Popen(command, stdout=PIPE, stderr=PIPE)
     stdout, stderr = process.communicate()
+
     exit_code = process.returncode
 
     if exit_code != 0:
         logger.error('An error has occurred while executing the %s', operation)
         logger.error('Output:\n%s\n\n Error:\n%s', stdout, stderr)
+    else:
+        logger.info(stdout)
     return exit_code

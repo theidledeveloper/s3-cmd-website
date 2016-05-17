@@ -38,6 +38,9 @@ def main(**kwargs):
     logger = logging.getLogger(log.ROOT_LOGGER_NAME)
     logger.debug('Executing %s' % ACTION)
 
+    args = kwargs['args']
+    s3_cmd_config = args.s3_cmd_config
+
     s3_website_config = kwargs['s3_website_config']
 
     site = s3_website_config.site
@@ -55,8 +58,8 @@ def main(**kwargs):
 
     for rule in cache_rules:
 
-        command = [helper.s3cmd_path(), 'sync', '--region', s3_endpoint,
-                   '--acl-public', ]
+        command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'sync',
+                   '--region', s3_endpoint, '--acl-public', ]
 
         local_match = ("'%s'" % rule['match']
                        if 'match' in rule and rule['match'] else "'*.*'")

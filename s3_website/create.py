@@ -67,6 +67,7 @@ def main(**kwargs):
     args = kwargs['args']
     s3_website_config = kwargs['s3_website_config']
 
+    s3_cmd_config = args.s3_cmd_config
     make_bucket = args.make_bucket
     index_file = args.index_file
     error_file = args.error_file
@@ -77,8 +78,8 @@ def main(**kwargs):
 
     if make_bucket:
         logger.info("Creating bucket '%s'" % s3_bucket)
-        create_bucket = [helper.s3cmd_path(), 'mb', '--region', s3_endpoint,
-                         s3_bucket, ]
+        create_bucket = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config,
+                         'mb', '--region', s3_endpoint, s3_bucket, ]
         result = command_runner.run(logger, create_bucket, ACTION)
         if result != 0:
             return result
@@ -86,7 +87,8 @@ def main(**kwargs):
         logger.debug("Skipping creation of bucket '%s'" % s3_bucket)
 
     logger.info("Creating website '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), 'ws-create', '--region', s3_endpoint, ]
+    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'ws-create',
+               '--region', s3_endpoint, ]
 
     command.extend(['--ws-index=%s' % index_file], )
     command.extend(['--ws-error=%s' % error_file], )

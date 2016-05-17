@@ -85,6 +85,7 @@ def main(**kwargs):
     args = kwargs['args']
     s3_website_config = kwargs['s3_website_config']
 
+    s3_cmd_config = args.s3_cmd_config
     enable = args.enable
     disable = args.disable
     cname = args.cname
@@ -99,7 +100,8 @@ def main(**kwargs):
 
     logger.info("Updating CloudFront distribution '%s'" %
                 cloudfront_distribution)
-    command = [helper.s3cmd_path(), 'cfmodify', '--region', s3_endpoint, ]
+    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'cfmodify',
+               '--region', s3_endpoint, ]
 
     if enable:
         command.extend(['--enable'])

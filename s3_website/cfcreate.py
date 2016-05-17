@@ -63,6 +63,7 @@ def main(**kwargs):
     args = kwargs['args']
     s3_website_config = kwargs['s3_website_config']
 
+    s3_cmd_config = args.s3_cmd_config
     cname = args.cname
     comment = args.comment
     root_object = args.root_object
@@ -71,7 +72,8 @@ def main(**kwargs):
     s3_endpoint = s3_website_config.s3_endpoint
 
     logger.info("Creating CloudFront distribution '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), 'cfcreate', '--region', s3_endpoint, ]
+    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'cfcreate',
+               '--region', s3_endpoint, ]
 
     if cname:
         command.extend(['--cf-add-cname=%s' % cname],)

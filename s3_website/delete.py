@@ -45,6 +45,7 @@ def main(**kwargs):
     args = kwargs['args']
     s3_website_config = kwargs['s3_website_config']
 
+    s3_cmd_config = args.s3_cmd_config
     delete_bucket = args.delete_bucket
 
     s3_bucket = helper.add_s3_prefix(s3_website_config.s3_bucket)
@@ -52,15 +53,16 @@ def main(**kwargs):
     s3_endpoint = s3_website_config.s3_endpoint
 
     logger.info("Deleting website '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), 'ws-delete', s3_bucket]
+    command = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config, 'ws-delete',
+               s3_bucket]
     result = command_runner.run(logger, command, ACTION)
     if result != 0:
         return result
 
     if delete_bucket:
         logger.info("Removing '%s'" % s3_bucket)
-        delete_bucket = [helper.s3cmd_path(), 'rb', '--region', s3_endpoint,
-                         s3_bucket, ]
+        delete_bucket = [helper.s3cmd_path(), '--config=%s' % s3_cmd_config,
+                         'rb', '--region', s3_endpoint, s3_bucket, ]
         result = command_runner.run(logger, delete_bucket, ACTION)
 
     return result
