@@ -1,6 +1,6 @@
 package = 's3_cmd_website'
 author = 'TheIdleDeveloper'
-version = '0.1.0'
+version = '0.2.0'
 author_email = 'TheIdleDeveloper@gmail.com'
 download_url = 'https://github.com/%s/%s/tarball/%s' % (author, package,
                                                         version,
