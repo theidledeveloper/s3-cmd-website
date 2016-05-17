@@ -62,11 +62,11 @@ def main(**kwargs):
 
         command = [helper.s3cmd_path(), 'sync', '--acl-public', ]
 
-        local_match = ("'%s'" % rule['match']
-                       if 'match' in rule and rule['match'] else "'*.*'")
+        local_match = (rule['match']
+                       if 'match' in rule and rule['match'] else "'*'")
 
-        local_exclude = ("'%s'" % rule['exclude']
-                         if 'exclude' in rule and rule['exclude'] else "'*.*'")
+        local_exclude = (rule['exclude']
+                         if 'exclude' in rule and rule['exclude'] else "'*'")
 
         command.extend(['--exclude', local_exclude, '--include',
                         local_match], )
