@@ -39,7 +39,7 @@ def global_options(parser):
                         )
 
     parser.add_argument('-L', '--log_level',
-                        default='debug',
+                        default='info',
                         help='Log level for script. Default: %(default)s',
                         )
 
