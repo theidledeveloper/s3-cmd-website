@@ -21,6 +21,8 @@ class S3WebsiteConfig(object):
                  gzip,
                  guess_mime_type,
                  public,
+                 index_file,
+                 error_file,
                  ):
         self.site = site
         self.s3_bucket = s3_bucket
@@ -35,6 +37,8 @@ class S3WebsiteConfig(object):
         self.gzip = gzip
         self.guess_mime_type = guess_mime_type
         self.public = public
+        self.index_file = index_file
+        self.error_file = error_file
 
     @staticmethod
     def load_configuration(path, logger):
@@ -82,4 +86,6 @@ class S3WebsiteConfig(object):
                                guess_mime_type=config.get('guess_mime_type',
                                                           None),
                                public=config.get('public', None),
+                               index_file=config.get('index_file', None),
+                               error_file=config.get('error_file', None),
                                )
