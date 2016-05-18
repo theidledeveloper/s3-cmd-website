@@ -184,8 +184,8 @@ def get_configuration_attribute(attribute, class_obj, default=None):
     :param default: String - The default to be returned if the attribute does
       not exist, Default: None
     """
-    if hasattr(s3_website_config, attribute):
-        return s3_website_config[attribute]
+    if hasattr(class_obj, attribute):
+        return class_obj[attribute]
     else:
         return default
 

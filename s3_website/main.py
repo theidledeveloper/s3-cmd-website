@@ -11,7 +11,6 @@ from s3_website import exitcodes
 from s3_website import helper
 from s3_website import information
 from s3_website import log
-from s3_website import pkginfo
 from s3_website import update
 from s3_website import version
 from s3_website.S3WebsiteConfig import S3WebsiteConfig

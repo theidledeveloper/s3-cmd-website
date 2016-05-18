@@ -64,7 +64,7 @@ def main(**kwargs):
                                 access_key=access_key,
                                 secret_key=secret_key,
                                 region=s3_endpoint,
-                              )
+                                )
     if result != 0:
         return result
 
