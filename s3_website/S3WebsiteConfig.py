@@ -79,6 +79,7 @@ class S3WebsiteConfig(object):
                                cache_rules=config.get('cache_rules', {}),
                                maxage=config.get('maxage', None),
                                gzip=config.get('gzip', None),
-                               guess_mime_type=config.get('guess_mime_type', None),
+                               guess_mime_type=config.get('guess_mime_type',
+                                                          None),
                                public=config.get('public', None),
                                )
