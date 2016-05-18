@@ -16,6 +16,7 @@ deploy:
     on:
       branch: master
       tags: false
+      repo: theidledeveloper/s3-cmd-website
       condition: $TRAVIS_PYTHON_VERSION = "2.7"
 
 deploy:
