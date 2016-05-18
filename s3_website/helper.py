@@ -185,14 +185,14 @@ def get_configuration_attribute(attribute, class_obj, default=None):
       not exist, Default: None
     """
     if hasattr(class_obj, attribute):
-        return class_obj[attribute]
+        return getattr(class_obj, attribute)
     else:
         return default
 
 
 def get_configuration_key(key, config, default=None):
     """
-    Look for a key in a dictionary and return if present and not None
+    Look for a key in a dictionary and return if present
     Otherwise return the specified default
 
     :param key: String - Name of key to look for
@@ -200,7 +200,7 @@ def get_configuration_key(key, config, default=None):
     :param default: String - The default to be returned if the key does
       not exist, Default: None
     """
-    if key in config and config[key]:
+    if key in config:
         return config[key]
     else:
         return default

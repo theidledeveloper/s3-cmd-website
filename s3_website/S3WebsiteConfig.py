@@ -7,15 +7,34 @@ class S3WebsiteConfig(object):
     Store the state of the s3 website configuration to be used by the functions
     """
 
-    def __init__(self, site, s3_bucket, cloudfront_distribution_id,
-                 s3_endpoint, cache_rules, maxage, gzip):
+    def __init__(self,
+                 site,
+                 s3_bucket,
+                 cloudfront_distribution_id,
+                 cloudfront_cname,
+                 cloudfront_comment,
+                 cloudfront_root_object,
+                 cloudfront_no_access_logging,
+                 s3_endpoint,
+                 cache_rules,
+                 maxage,
+                 gzip,
+                 guess_mime_type,
+                 public,
+                 ):
         self.site = site
         self.s3_bucket = s3_bucket
         self.cloudfront_distribution_id = cloudfront_distribution_id
+        self.cloudfront_cname = cloudfront_cname
+        self.cloudfront_comment = cloudfront_comment
+        self.cloudfront_root_object = cloudfront_root_object
+        self.cloudfront_no_access_logging = cloudfront_no_access_logging
         self.s3_endpoint = s3_endpoint
         self.cache_rules = cache_rules
         self.maxage = maxage
         self.gzip = gzip
+        self.guess_mime_type = guess_mime_type
+        self.public = public
 
     @staticmethod
     def load_configuration(path, logger):
@@ -48,8 +67,18 @@ class S3WebsiteConfig(object):
                                s3_bucket=config.get('s3_bucket', None),
                                cloudfront_distribution_id=config.get(
                                    'cloudfront_distribution_id', None),
+                               cloudfront_cname=config.get(
+                                   'cloudfront_cname', None),
+                               cloudfront_comment=config.get(
+                                   'cloudfront_comment', None),
+                               cloudfront_root_object=config.get(
+                                   'cloudfront_root_object', None),
+                               cloudfront_no_access_logging=config.get(
+                                   'cloudfront_no_access_logging', None),
                                s3_endpoint=config.get('s3_endpoint', None),
                                cache_rules=config.get('cache_rules', {}),
                                maxage=config.get('maxage', None),
                                gzip=config.get('gzip', None),
+                               guess_mime_type=config.get('guess_mime_type', None),
+                               public=config.get('public', None),
                                )

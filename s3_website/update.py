@@ -69,7 +69,7 @@ def main(**kwargs):
 
         local_exclude = helper.get_configuration_key('exclude', rule, '*')
 
-        local_public = helper.get_configuration_key('public', rule, '*')
+        local_public = helper.get_configuration_key('public', rule)
 
         command.extend(['--exclude', local_exclude, '--include',
                         local_match], )
@@ -93,15 +93,16 @@ def main(**kwargs):
         if guess_mime_type:
             command.extend(['--guess-mime-type', '--no-mime-magic'], )
 
-        if public or public is None:
-            command.extend(['--acl-public'], )
+        if local_public is not None:
+            if local_public:
+                command.extend(['--acl-public'], )
+            else:
+                command.extend(['--acl-private'], )
         else:
-            command.extend(['--acl-private'], )
-
-        if local_public or local_public is None:
-            command.extend(['--acl-public'], )
-        else:
-            command.extend(['--acl-private'], )
+            if public or public is None:
+                command.extend(['--acl-public'], )
+            else:
+                command.extend(['--acl-private'], )
 
         command.extend([site, s3_bucket])
         result = command_runner.run(logger=logger,
