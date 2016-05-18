@@ -64,6 +64,8 @@ def main(**kwargs):
     for rule in cache_rules:
 
         command = ['sync', ]
+        modify_command = ['modify', '--recursive', ]
+        options = []
 
         local_match = helper.get_configuration_key('match', rule, '*')
 
@@ -71,7 +73,7 @@ def main(**kwargs):
 
         local_public = helper.get_configuration_key('public', rule)
 
-        command.extend(['--exclude', local_exclude, '--include',
+        options.extend(['--exclude', local_exclude, '--include',
                         local_match], )
 
         age_string = '--add-header=Cache-Control:max-age'
@@ -81,30 +83,44 @@ def main(**kwargs):
         elif maxage:
             maxage = helper.maxage_in_seconds(maxage)
 
-        command.extend(['%s=%s' % (age_string, maxage)])
+        options.extend(['%s=%s' % (age_string, maxage)])
 
         gzip_string = '--add-header=Content-Encoding:gzip'
         if 'gzip' in rule:
             if rule['gzip']:
-                command.extend([gzip_string], )
+                options.extend([gzip_string], )
         elif gzip:
-            command.extend([gzip_string], )
+            options.extend([gzip_string], )
 
         if guess_mime_type:
-            command.extend(['--guess-mime-type', '--no-mime-magic'], )
+            options.extend(['--guess-mime-type', '--no-mime-magic'], )
 
         if local_public is not None:
             if local_public:
-                command.extend(['--acl-public'], )
+                options.extend(['--acl-public'], )
             else:
-                command.extend(['--acl-private'], )
+                options.extend(['--acl-private'], )
         else:
             if public or public is None:
-                command.extend(['--acl-public'], )
+                options.extend(['--acl-public'], )
             else:
-                command.extend(['--acl-private'], )
+                options.extend(['--acl-private'], )
 
-        command.extend([site, s3_bucket])
+        modify_command.extend(options)
+        modify_command.append(s3_bucket)
+        result = command_runner.run(logger=logger,
+                                    command=modify_command,
+                                    operation=ACTION,
+                                    s3cmd_config_path=s3_cmd_config,
+                                    access_key=access_key,
+                                    secret_key=secret_key,
+                                    region=s3_endpoint,
+                                    )
+        if result != 0:
+            return result
+
+        command.extend(options)
+        command.extend([site, s3_bucket], )
         result = command_runner.run(logger=logger,
                                     command=command,
                                     operation=ACTION,
