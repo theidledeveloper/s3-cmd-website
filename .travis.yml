@@ -6,7 +6,6 @@ script: tox
 after_success: coveralls
 
 deploy:
-    # test pypi
   - provider: pypi
     distributions: "sdist bdist_wheel"
     server: https://testpypi.python.org/pypi
@@ -19,14 +18,13 @@ deploy:
       repo: theidledeveloper/s3-cmd-website
       condition: $TRAVIS_PYTHON_VERSION = "2.7"
 
-deploy:
-  provider: pypi
-  distributions: "sdist bdist_wheel"
-  user: theidledeveloper
-  password:
-    secure: "GeANSzCac2CLmbP5rXfUl9gwV10U9Ck0lu8HXo9EvUhhu4oDRHPLGjWyirAGbreoLKzLY8qEnWkg1i/3aHn9C6Wno6REJWCykPQN8IyGnMisXnm9LIrZ1BlDmMHA1NiQpvrzn0VjJr7yxDwE9VouuZ9LIwG/oRxqvhne7dFgBa/fWSbcqYbcxulMna5ZhAABKtJxeXS4GPxAhHXuPdnP3Sj+rTlqqKO706vOFC1DJTw7v95lM0LGs5Se0Uj/AikVCa8IpGfRelubFcKPv41u5+lC/etAMjWrVMprpYLQEO6KQnRhtR0ePwGF9tU8LJJE5r5GlEIPGXpPCYm1KDLhfGr5mQXxBtqGZxQWOB3rvZUPSZZ8NIy9suZzz7MVjcrsZvluVI/JPnO/6BfPPoZN7NGl5qHYwt3n4AwLAhjHjdgWMeT0NqricD3mPmwHe/5RqWf2dLAdXIwbI9j5so8R4UsD85bNlmd6bI4rGIV19FEsP5qvB5rCcOvtDUzNXcAS9S6DnPdfRMDMUHWFGkYSbNh2gc3oOwZtO77iGMM/pAthHFF1S/nqjYFnxXRPCeMZ87lu6ON5LiCUg9YX5cwHVbut0Ry20RLchLKKBFGe9Vi+o/ZO0W3QxK9QGbURdRLG2IW2lQev6c1Tlc/K/06ebUdOxU8vqXjbAWZxmHp05kY="
-  on:
-    tags: true
-    branch: master
-    repo: theidledeveloper/s3-cmd-website
-    condition: $TRAVIS_PYTHON_VERSION = "2.7"
+  - provider: pypi
+    distributions: "sdist bdist_wheel"
+    user: theidledeveloper
+    password:
+      secure: "GeANSzCac2CLmbP5rXfUl9gwV10U9Ck0lu8HXo9EvUhhu4oDRHPLGjWyirAGbreoLKzLY8qEnWkg1i/3aHn9C6Wno6REJWCykPQN8IyGnMisXnm9LIrZ1BlDmMHA1NiQpvrzn0VjJr7yxDwE9VouuZ9LIwG/oRxqvhne7dFgBa/fWSbcqYbcxulMna5ZhAABKtJxeXS4GPxAhHXuPdnP3Sj+rTlqqKO706vOFC1DJTw7v95lM0LGs5Se0Uj/AikVCa8IpGfRelubFcKPv41u5+lC/etAMjWrVMprpYLQEO6KQnRhtR0ePwGF9tU8LJJE5r5GlEIPGXpPCYm1KDLhfGr5mQXxBtqGZxQWOB3rvZUPSZZ8NIy9suZzz7MVjcrsZvluVI/JPnO/6BfPPoZN7NGl5qHYwt3n4AwLAhjHjdgWMeT0NqricD3mPmwHe/5RqWf2dLAdXIwbI9j5so8R4UsD85bNlmd6bI4rGIV19FEsP5qvB5rCcOvtDUzNXcAS9S6DnPdfRMDMUHWFGkYSbNh2gc3oOwZtO77iGMM/pAthHFF1S/nqjYFnxXRPCeMZ87lu6ON5LiCUg9YX5cwHVbut0Ry20RLchLKKBFGe9Vi+o/ZO0W3QxK9QGbURdRLG2IW2lQev6c1Tlc/K/06ebUdOxU8vqXjbAWZxmHp05kY="
+    on:
+      tags: true
+      branch: master
+      repo: theidledeveloper/s3-cmd-website
+      condition: $TRAVIS_PYTHON_VERSION = "2.7"
