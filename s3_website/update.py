@@ -23,6 +23,24 @@ def set_command_line_options(subparsers):
                                    add_help=False,
                                    )
 
+    meg = parser.add_mutually_exclusive_group()
+
+    meg.add_argument('--sync_only',
+                     action='store_true',
+                     help='Only perform a sync of files, do not modify the'
+                          ' metadata of existing or unchanged file',
+                     required=False,
+                     default=False,
+                     )
+
+    meg.add_argument('--metadata_only',
+                     action='store_true',
+                     help='Only perform a metadata update of existing files'
+                          ' and do not sync new or updated files',
+                     required=False,
+                     default=False,
+                     )
+
     parser.set_defaults(func=main)
 
 
@@ -42,6 +60,9 @@ def main(**kwargs):
     s3_cmd_config = args.s3_cmd_config
     access_key = args.access_key
     secret_key = args.secret_key
+
+    sync_only = args.sync_only
+    metadata_only = args.metadata_only
 
     s3_website_config = kwargs['s3_website_config']
 
@@ -108,28 +129,31 @@ def main(**kwargs):
 
         modify_command.extend(options)
         modify_command.append(s3_bucket)
-        result = command_runner.run(logger=logger,
-                                    command=modify_command,
-                                    operation=ACTION,
-                                    s3cmd_config_path=s3_cmd_config,
-                                    access_key=access_key,
-                                    secret_key=secret_key,
-                                    region=s3_endpoint,
-                                    )
-        if result != 0:
-            return result
 
-        command.extend(options)
-        command.extend([site, s3_bucket], )
-        result = command_runner.run(logger=logger,
-                                    command=command,
-                                    operation=ACTION,
-                                    s3cmd_config_path=s3_cmd_config,
-                                    access_key=access_key,
-                                    secret_key=secret_key,
-                                    region=s3_endpoint,
-                                    )
-        if result != 0:
-            return result
+        if not sync_only:
+            result = command_runner.run(logger=logger,
+                                        command=modify_command,
+                                        operation=ACTION,
+                                        s3cmd_config_path=s3_cmd_config,
+                                        access_key=access_key,
+                                        secret_key=secret_key,
+                                        region=s3_endpoint,
+                                        )
+            if result != 0:
+                return result
+
+        if not metadata_only:
+            command.extend(options)
+            command.extend([site, s3_bucket], )
+            result = command_runner.run(logger=logger,
+                                        command=command,
+                                        operation=ACTION,
+                                        s3cmd_config_path=s3_cmd_config,
+                                        access_key=access_key,
+                                        secret_key=secret_key,
+                                        region=s3_endpoint,
+                                        )
+            if result != 0:
+                return result
 
     return exitcodes.EX_OK
