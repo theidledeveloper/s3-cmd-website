@@ -49,24 +49,27 @@ def main(**kwargs):
     s3_bucket = helper.add_s3_prefix(s3_website_config.s3_bucket)
     s3_endpoint = s3_website_config.s3_endpoint
 
-    gzip = (s3_website_config.gzip if hasattr(s3_website_config, 'gzip')
-            else None)
+    guess_mime_type = helper.get_configuration_attribute('guess_mime_type',
+                                                         s3_website_config)
+    public = helper.get_configuration_attribute('public',
+                                                s3_website_config)
 
-    maxage = (s3_website_config.maxage if hasattr(s3_website_config, 'maxage')
-              else None)
+    gzip = helper.get_configuration_attribute('gzip', s3_website_config)
 
-    cache_rules = (s3_website_config.cache_rules
-                   if hasattr(s3_website_config, 'cache_rules') else None)
+    maxage = helper.get_configuration_attribute('maxage', s3_website_config)
+
+    cache_rules = helper.get_configuration_attribute('cache_rules',
+                                                     s3_website_config)
 
     for rule in cache_rules:
 
-        command = [helper.s3cmd_path(), 'sync', '--acl-public', ]
+        command = ['sync', ]
 
-        local_match = (rule['match']
-                       if 'match' in rule and rule['match'] else "'*'")
+        local_match = helper.get_configuration_key('match', rule, '*')
 
-        local_exclude = (rule['exclude']
-                         if 'exclude' in rule and rule['exclude'] else "'*'")
+        local_exclude = helper.get_configuration_key('exclude', rule, '*')
+
+        local_public = helper.get_configuration_key('public', rule, '*')
 
         command.extend(['--exclude', local_exclude, '--include',
                         local_match], )
@@ -87,9 +90,28 @@ def main(**kwargs):
         elif gzip:
             command.extend([gzip_string], )
 
+        if guess_mime_type:
+            command.extend(['--guess-mime-type', '--no-mime-magic'], )
+
+        if public or public is None:
+            command.extend(['--acl-public'], )
+        else:
+            command.extend(['--acl-private'], )
+
+        if local_public or local_public is None:
+            command.extend(['--acl-public'], )
+        else:
+            command.extend(['--acl-private'], )
+
         command.extend([site, s3_bucket])
-        result = command_runner.run(logger, command, ACTION, s3_cmd_config,
-                                    access_key, secret_key, s3_endpoint, )
+        result = command_runner.run(logger=logger,
+                                    command=command,
+                                    operation=ACTION,
+                                    s3cmd_config_path=s3_cmd_config,
+                                    access_key=access_key,
+                                    secret_key=secret_key,
+                                    region=s3_endpoint,
+                                    )
         if result != 0:
             return result
 

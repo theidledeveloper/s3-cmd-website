@@ -48,6 +48,12 @@ def main(**kwargs):
 
     logger.info("Information for website '%s'" % s3_bucket)
 
-    command = [helper.s3cmd_path(), 'ws-info', s3_bucket, '--verbose', ]
-    return command_runner.run(logger, command, ACTION, s3_cmd_config,
-                              access_key, secret_key, s3_endpoint, )
+    command = ['ws-info', s3_bucket, '--verbose', ]
+    return command_runner.run(logger=logger,
+                              command=command,
+                              operation=ACTION,
+                              s3cmd_config_path=s3_cmd_config,
+                              access_key=access_key,
+                              secret_key=secret_key,
+                              region=s3_endpoint,
+                              )

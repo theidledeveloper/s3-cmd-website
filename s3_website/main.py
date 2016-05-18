@@ -59,12 +59,6 @@ def global_options(parser):
                         help='Log level for script. Default: %(default)s',
                         )
 
-    parser.add_argument('-v', '--version',
-                        action='store_true',
-                        help='Show s3cmd_website version (%s) and exit.'
-                             % pkginfo.version,
-                        )
-
 
 def main():
     """

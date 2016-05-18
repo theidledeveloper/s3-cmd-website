@@ -27,27 +27,6 @@ def set_command_line_options(subparsers):
                         required=False,
                         )
 
-    parser.add_argument('-P', '--acl_public',
-                        action='store_true',
-                        help='Make the website public',
-                        default=False,
-                        required=False,
-                        )
-
-    parser.add_argument('--index_file',
-                        action='store',
-                        default='index.html',
-                        help='The index file used by the website '
-                             'Default: %(default)s',
-                        )
-
-    parser.add_argument('--error_file',
-                        action='store',
-                        default='404.html',
-                        help='The error file used by the website '
-                             'Default: %(default)s',
-                        )
-
     parser.set_defaults(func=main)
 
 
@@ -72,34 +51,46 @@ def main(**kwargs):
     secret_key = args.secret_key
 
     make_bucket = args.make_bucket
-    index_file = args.index_file
-    error_file = args.error_file
-    acl_public = args.acl_public
 
     s3_bucket = helper.add_s3_prefix(s3_website_config.s3_bucket)
     s3_endpoint = s3_website_config.s3_endpoint
+    public = s3_website_config.public
+    index_file = s3_website_config.index_file
+    error_file = s3_website_config.error_file
 
     if make_bucket:
         logger.info("Creating bucket '%s'" % s3_bucket)
-        create_bucket = [helper.s3cmd_path(), 'mb', s3_bucket, ]
-        result = command_runner.run(logger, create_bucket, ACTION,
-                                    s3_cmd_config, access_key, secret_key,
-                                    s3_endpoint, )
+        create_bucket = ['mb', s3_bucket, ]
+        result = command_runner.run(logger=logger,
+                                    command=create_bucket,
+                                    operation=ACTION,
+                                    s3cmd_config_path=s3_cmd_config,
+                                    access_key=access_key,
+                                    secret_key=secret_key,
+                                    region=s3_endpoint,
+                                    )
         if result != 0:
             return result
     else:
         logger.debug("Skipping creation of bucket '%s'" % s3_bucket)
 
     logger.info("Creating website '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), 'ws-create', ]
+    command = ['ws-create', ]
 
     command.extend(['--ws-index=%s' % index_file], )
     command.extend(['--ws-error=%s' % error_file], )
 
-    if acl_public:
-        logger.debug("Website will be public")
+    if public or public is None:
         command.extend(['--acl-public'], )
+    else:
+        command.extend(['--acl-private'], )
 
     command.extend([s3_bucket])
-    return command_runner.run(logger, command, ACTION, s3_cmd_config,
-                              access_key, secret_key, s3_endpoint, )
+    return command_runner.run(logger=logger,
+                              command=command,
+                              operation=ACTION,
+                              s3cmd_config_path=s3_cmd_config,
+                              access_key=access_key,
+                              secret_key=secret_key,
+                              region=s3_endpoint,
+                              )

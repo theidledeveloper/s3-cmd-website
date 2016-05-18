@@ -56,17 +56,28 @@ def main(**kwargs):
     s3_endpoint = s3_website_config.s3_endpoint
 
     logger.info("Deleting website '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), 'ws-delete', s3_bucket, ]
-    result = command_runner.run(logger, command, ACTION, s3_cmd_config,
-                                access_key, secret_key, s3_endpoint, )
+    command = ['ws-delete', s3_bucket, ]
+    result = command_runner.run(logger=logger,
+                                command=command,
+                                operation=ACTION,
+                                s3cmd_config_path=s3_cmd_config,
+                                access_key=access_key,
+                                secret_key=secret_key,
+                                region=s3_endpoint,
+                              )
     if result != 0:
         return result
 
     if delete_bucket:
         logger.info("Removing '%s'" % s3_bucket)
-        delete_bucket = [helper.s3cmd_path(), 'rb', s3_bucket, ]
-        result = command_runner.run(logger, delete_bucket, ACTION,
-                                    s3_cmd_config, access_key, secret_key,
-                                    s3_endpoint, )
+        delete_bucket = ['rb', s3_bucket, ]
+        result = command_runner.run(logger=logger,
+                                    command=delete_bucket,
+                                    operation=ACTION,
+                                    s3cmd_config_path=s3_cmd_config,
+                                    access_key=access_key,
+                                    secret_key=secret_key,
+                                    region=s3_endpoint,
+                                    )
 
     return result

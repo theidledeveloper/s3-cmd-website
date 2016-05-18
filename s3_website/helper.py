@@ -172,3 +172,35 @@ def required_configuration(required_attributes):
                 return False
         return inner
     return outer
+
+
+def get_configuration_attribute(attribute, class_obj, default=None):
+    """
+    Look for an attribute in a class and return if present
+    Otherwise return the specified default
+
+    :param attribute: String - Name of attribute to look for
+    :param class_obj: Class - Class to look for attribute
+    :param default: String - The default to be returned if the attribute does
+      not exist, Default: None
+    """
+    if hasattr(s3_website_config, attribute):
+        return s3_website_config[attribute]
+    else:
+        return default
+
+
+def get_configuration_key(key, config, default=None):
+    """
+    Look for a key in a dictionary and return if present and not None
+    Otherwise return the specified default
+
+    :param key: String - Name of key to look for
+    :param config: Dict - Dictionary to look for key
+    :param default: String - The default to be returned if the key does
+      not exist, Default: None
+    """
+    if key in config and config[key]:
+        return config[key]
+    else:
+        return default

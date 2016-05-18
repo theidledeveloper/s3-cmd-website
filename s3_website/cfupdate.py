@@ -39,33 +39,6 @@ def set_command_line_options(subparsers):
                      default=False,
                      )
 
-    parser.add_argument('--no_access_logging',
-                        action='store_true',
-                        help='Prevent access logging for the CloudFront'
-                             ' distribution',
-                        required=False,
-                        default=False,
-                        )
-
-    parser.add_argument('--cname',
-                        action='store',
-                        help='Add a CNAME to the CloudFront distribution',
-                        required=False,
-                        )
-
-    parser.add_argument('--comment',
-                        action='store',
-                        help='Add a comment to the CloudFront distribution',
-                        required=False,
-                        )
-
-    parser.add_argument('--root_object',
-                        action='store',
-                        help='The default root object if no object is'
-                             ' specified in the URL',
-                        required=False,
-                        )
-
     parser.set_defaults(func=main)
 
 
@@ -91,10 +64,16 @@ def main(**kwargs):
 
     enable = args.enable
     disable = args.disable
-    cname = args.cname
-    comment = args.comment
-    root_object = args.root_object
-    no_access_logging = args.no_access_logging
+
+    cname = helper.get_configuration_attribute('cloudfront_cname',
+                                               s3_website_config)
+    comment = helper.get_configuration_attribute('cloudfront_comment',
+                                                 s3_website_config)
+    root_object = helper.get_configuration_attribute('cloudfront_root_object',
+                                                     s3_website_config)
+    no_access_logging = helper.get_configuration_attribute(
+        'cloudfront_no_access_logging',
+        s3_website_config)
 
     cloudfront_distribution = helper.add_cf_prefix(
         s3_website_config.cloudfront_distribution_id)
@@ -103,7 +82,7 @@ def main(**kwargs):
 
     logger.info("Updating CloudFront distribution '%s'" %
                 cloudfront_distribution)
-    command = [helper.s3cmd_path(), 'cfmodify', ]
+    command = ['cfmodify', ]
 
     if enable:
         command.extend(['--enable'])
@@ -120,5 +99,11 @@ def main(**kwargs):
 
     command.extend([cloudfront_distribution], )
 
-    return command_runner.run(logger, command, ACTION, s3_cmd_config,
-                              access_key, secret_key, s3_endpoint, )
+    return command_runner.run(logger=logger,
+                              command=command,
+                              operation=ACTION,
+                              s3cmd_config_path=s3_cmd_config,
+                              access_key=access_key,
+                              secret_key=secret_key,
+                              region=s3_endpoint,
+                              )

@@ -22,28 +22,6 @@ def set_command_line_options(subparsers):
                                    add_help=False,
                                    )
 
-    parser.add_argument('--cname',
-                        action='store_true',
-                        default=None,
-                        help='Add a CNAME to the CloudFront distribution',
-                        required=False,
-                        )
-
-    parser.add_argument('--comment',
-                        action='store',
-                        default=None,
-                        help='Add a comment to the CloudFront distribution',
-                        required=False,
-                        )
-
-    parser.add_argument('--root_object',
-                        action='store',
-                        default=None,
-                        help='Set the default root object to return when no'
-                             ' object is specified in the URL',
-                        required=False,
-                        )
-
     parser.set_defaults(func=main)
 
 
@@ -67,15 +45,18 @@ def main(**kwargs):
     access_key = args.access_key
     secret_key = args.secret_key
 
-    cname = args.cname
-    comment = args.comment
-    root_object = args.root_object
+    cname = helper.get_configuration_attribute('cloudfront_cname',
+                                               s3_website_config)
+    comment = helper.get_configuration_attribute('cloudfront_comment',
+                                                 s3_website_config)
+    root_object = helper.get_configuration_attribute('cloudfront_root_object',
+                                                     s3_website_config)
 
     s3_bucket = helper.add_s3_prefix(s3_website_config.s3_bucket)
     s3_endpoint = s3_website_config.s3_endpoint
 
     logger.info("Creating CloudFront distribution '%s'" % s3_bucket)
-    command = [helper.s3cmd_path(), 'cfcreate', ]
+    command = ['cfcreate', ]
 
     if cname:
         command.extend(['--cf-add-cname=%s' % cname],)
@@ -86,5 +67,11 @@ def main(**kwargs):
 
     command.extend([s3_bucket], )
 
-    return command_runner.run(logger, command, ACTION, s3_cmd_config,
-                              access_key, secret_key, s3_endpoint, )
+    return command_runner.run(logger=logger,
+                              command=command,
+                              operation=ACTION,
+                              s3cmd_config_path=s3_cmd_config,
+                              access_key=access_key,
+                              secret_key=secret_key,
+                              region=s3_endpoint,
+                              )

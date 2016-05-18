@@ -2,15 +2,20 @@
 site: '.'
 s3_bucket: 'example.com'
 cloudfront_distribution_id: 'XXXXXXXXXXX'
+cloudfront_cname: ''
+cloudfront_comment: ''
+cloudfront_root_object: ''
+cloudfront_no_access_logging: ''
 s3_endpoint: 'ap-southeast-2'
 
 cache_rules:
   - match: "/assets/*"
     maxage: 30 days
+    gzip: false
 
   - match: "/css/*"
     maxage: 30 days
-    gzip: false
+    public: false
 
   - match: "*"
     exclude: "/assets"
@@ -18,3 +23,5 @@ cache_rules:
 
 maxage: '1 hour'
 gzip: true
+guess_mime_type: true
+public: true

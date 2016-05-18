@@ -51,8 +51,14 @@ def main(**kwargs):
 
     logger.info("Deleting CloudFront distribution '%s'" %
                 cloudfront_distribution)
-    command = [helper.s3cmd_path(), 'cfdelete', ]
+    command = ['cfdelete', ]
 
     command.extend([cloudfront_distribution])
-    return command_runner.run(logger, command, ACTION, s3_cmd_config,
-                              access_key, secret_key, s3_endpoint, )
+    return command_runner.run(logger=logger,
+                              command=command,
+                              operation=ACTION,
+                              s3cmd_config_path=s3_cmd_config,
+                              access_key=access_key,
+                              secret_key=secret_key,
+                              region=s3_endpoint,
+                              )
