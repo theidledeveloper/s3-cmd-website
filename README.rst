@@ -61,18 +61,40 @@ Configuration file
     The CloudFront distribution to mange. When creating the distribution the
     id will be displayed for you to add into the configuration.
 
+**cloudfront_cname**
+    Add a CNAME to the CloudFront distribution to.
+
+**cloudfront_comment**
+    Add a comment to a CloudFront distribution.
+
+**cloudfront_root_object**
+    The object to return if no object is specified in the URL.
+
+**cloudfront_no_access_logging**
+    Turn off access logging for CloudFront requests.
+
 **cache_rules**
     A list of rules to determine the configuration of the uploaded files.
     Valid configuration is ``match`` which is the files or paths you want wish
     to effect, ``maxage`` the cache age of the files, ``gzip`` for defining
-    if gzip compression is to be turned on for these files and ``exclude`` to
-    remove files or paths from the match.
+    if gzip compression is to be turned on for these files, ``exclude`` to
+    remove files or paths from the match and ``public`` to create sub paths
+    or elements in your website to be public or private.
 
 **maxage**
-    The default cache for files where it is not explicitly defined
+    The default cache for files where it is not explicitly defined.
 
 **gzip**
     If gzip is to be turn enabled ort disabled if not defined in the match.
+
+**guess_mime_type**
+    If you want the s3cmd to determine the 'Content-Type' automatically based
+    off the file extension. Left blank or not supplied is the same as 'true'.
+
+**public**
+    If you want the site to be public or private. Left blank or not supplied
+    is the same as 'true'.
+
 
 Usage
 -----
