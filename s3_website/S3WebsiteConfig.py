@@ -21,8 +21,8 @@ class S3WebsiteConfig(object):
                  gzip,
                  guess_mime_type,
                  public,
-                 index_file,
-                 error_file,
+                 index_file='index.html',
+                 error_file='404.html',
                  ):
         self.site = site
         self.s3_bucket = s3_bucket
